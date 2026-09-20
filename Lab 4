@@ -1,0 +1,199 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+const int MAX_COLS = 10;
+
+
+void displayMatrix(const int mat[][MAX_COLS], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            cout << mat[i][j] << "\t";
+        }
+        cout << endl;
+    }
+}
+
+
+int sumMatrix(const int mat[][MAX_COLS], int rows, int cols) {
+    int total = 0;
+
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            total += mat[i][j];
+
+    return total;
+}
+
+
+double averageMatrix(const int mat[][MAX_COLS], int rows, int cols) {
+    return (double)sumMatrix(mat, rows, cols) / (rows * cols);
+}
+
+
+int findMaximum(const int mat[][MAX_COLS], int rows, int cols) {
+    int maxVal = mat[0][0];
+
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            if (mat[i][j] > maxVal)
+                maxVal = mat[i][j];
+
+    return maxVal;
+}
+
+
+int findMinimum(const int mat[][MAX_COLS], int rows, int cols) {
+    int minVal = mat[0][0];
+
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            if (mat[i][j] < minVal)
+                minVal = mat[i][j];
+
+    return minVal;
+}
+
+
+int countAboveThreshold(const int mat[][MAX_COLS],
+                        int rows, int cols, int threshold) {
+    int count = 0;
+
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            if (mat[i][j] > threshold)
+                count++;
+
+    return count;
+}
+
+
+void addMatrices(const int a[][MAX_COLS],
+                 const int b[][MAX_COLS],
+                 int result[][MAX_COLS],
+                 int rows, int cols) {
+
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            result[i][j] = a[i][j] + b[i][j];
+}
+
+
+void subtractMatrices(const int a[][MAX_COLS],
+                      const int b[][MAX_COLS],
+                      int result[][MAX_COLS],
+                      int rows, int cols) {
+
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            result[i][j] = a[i][j] - b[i][j];
+}
+
+
+bool multiplyMatrices(const int a[][MAX_COLS],
+                       const int b[][MAX_COLS],
+                       int result[][MAX_COLS],
+                       int rowsA, int colsA,
+                       int rowsB, int colsB) {
+
+    if (colsA != rowsB) {
+        cout << "Error: Cannot multiply the matrices.\n";
+        return false;
+    }
+
+    for (int i = 0; i < rowsA; i++) {
+        for (int j = 0; j < colsB; j++) {
+            result[i][j] = 0;
+
+            for (int k = 0; k < colsA; k++) {
+                result[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+
+    return true;
+}
+
+int main() {
+
+    cout << "====================================================\n";
+    cout << "     NATIONAL TEACHERS COLLEGE - BSIT PROGRAM\n";
+    cout << "     CC105: DATA STRUCTURES LABORATORY - WEEK 4\n";
+    cout << "====================================================\n\n";
+
+
+    cout << "--- PART C: IMAGE GRID PROCESSOR (4x4) ---\n\n";
+
+    int image[4][MAX_COLS] = {
+        {10, 20, 30, 40},
+        {50, 60, 70, 80},
+        {90, 100, 110, 120},
+        {130, 140, 150, 160}
+    };
+
+    cout << "Image Matrix:\n";
+    displayMatrix(image, 4, 4);
+
+    cout << "\nSum: " << sumMatrix(image, 4, 4);
+    cout << "\nAverage: " << fixed << setprecision(2)
+         << averageMatrix(image, 4, 4);
+    cout << "\nMaximum: " << findMaximum(image, 4, 4);
+    cout << "\nMinimum: " << findMinimum(image, 4, 4);
+
+    int threshold = 100;
+
+    cout << "\nValues above " << threshold << ": "
+         << countAboveThreshold(image, 4, 4, threshold);
+
+
+    cout << "\n\n--- PART D: MATRIX ADDITION ---\n";
+
+    int A[2][MAX_COLS] = {
+        {1, 2, 3},
+        {4, 5, 6}
+    };
+
+    int B[2][MAX_COLS] = {
+        {7, 8, 9},
+        {10, 11, 12}
+    };
+
+    int result[10][MAX_COLS];
+
+    addMatrices(A, B, result, 2, 3);
+
+    cout << "A + B:\n";
+    displayMatrix(result, 2, 3);
+
+    cout << "\n--- MATRIX SUBTRACTION ---\n";
+
+    subtractMatrices(A, B, result, 2, 3);
+
+    cout << "A - B:\n";
+    displayMatrix(result, 2, 3);
+
+
+    cout << "\n--- PART E: MATRIX MULTIPLICATION ---\n";
+
+    int M1[2][MAX_COLS] = {
+        {1, 2, 3},
+        {4, 5, 6}
+    };
+
+    int M2[3][MAX_COLS] = {
+        {7, 8},
+        {9, 10},
+        {11, 12}
+    };
+
+    if (multiplyMatrices(M1, M2, result, 2, 3, 3, 2)) {
+        cout << "M1 x M2:\n";
+        displayMatrix(result, 2, 2);
+    }
+
+    cout << "\n====================================================\n";
+    cout << "Program finished successfully.\n";
+    cout << "====================================================\n";
+
+    return 0;
+}
