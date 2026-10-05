@@ -1,0 +1,138 @@
+#include <iostream>
+using namespace std;
+
+class LinearData {
+private:
+    int* data;
+    int size;
+    int capacity;
+
+    void resize() {
+        capacity *= 2;
+
+        int* newData = new int[capacity];
+
+        for (int i = 0; i < size; i++) {
+            newData[i] = data[i];
+        }
+
+        delete[] data;
+        data = newData;
+    }
+
+public:
+    LinearData(int initialCapacity = 5) {
+        capacity = initialCapacity;
+        size = 0;
+        data = new int[capacity];
+    }
+
+    ~LinearData() {
+        delete[] data;
+    }
+
+    void add(int value) {
+        if (size == capacity) {
+            resize();
+        }
+
+        data[size] = value;
+        size++;
+    }
+
+    bool remove(int value) {
+        int index = -1;
+
+        for (int i = 0; i < size; i++) {
+            if (data[i] == value) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            return false;
+        }
+
+        for (int i = index; i < size - 1; i++) {
+            data[i] = data[i + 1];
+        }
+
+        size--;
+        return true;
+    }
+
+    int search(int value) {
+        for (int i = 0; i < size; i++) {
+            if (data[i] == value) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    void display() {
+        if (size == 0) {
+            cout << "Data is empty.\n";
+            return;
+        }
+
+        cout << "Data: ";
+
+        for (int i = 0; i < size; i++) {
+            cout << data[i] << " ";
+        }
+
+        cout << "\n";
+    }
+
+    int getSize() {
+        return size;
+    }
+
+    int getCapacity() {
+        return capacity;
+    }
+};
+
+int main() {
+    LinearData records;
+
+    // Normal test
+    records.add(10);
+    records.add(20);
+    records.add(30);
+    records.add(40);
+    records.add(50);
+    records.add(60);
+
+    cout << "=== LINEAR DATA ARCHITECTURE ===\n";
+    records.display();
+
+    // Search test
+    int position = records.search(30);
+
+    if (position != -1)
+        cout << "30 found at index " << position << ".\n";
+    else
+        cout << "30 not found.\n";
+
+    // Remove test
+    if (records.remove(30))
+        cout << "30 successfully removed.\n";
+    else
+        cout << "30 not found.\n";
+
+    records.display();
+
+    // Boundary test
+    cout << "\nSize: " << records.getSize() << endl;
+    cout << "Capacity: " << records.getCapacity() << endl;
+
+    // Edge-case test
+    if (!records.remove(999))
+        cout << "999 not found - test passed.\n";
+
+    return 0;
+}
